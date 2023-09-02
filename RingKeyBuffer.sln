@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RingKeyBuffer", "RingKeyBuffer\RingKeyBuffer.csproj", "{6C4C9976-A66C-4DBC-85BA-5811A3E69877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RingKeyBuffer.Benchmarks", "RingKeyBuffer.Benchmarks\RingKeyBuffer.Benchmarks.csproj", "{3A4F7FB7-1F84-4A9E-990A-CE9D29B8432F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RingKeyBuffer.Tests", "RingKeyBuffer.Tests\RingKeyBuffer.Tests.csproj", "{003CE3F4-3972-4329-8AFC-FA61759AC67B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C4C9976-A66C-4DBC-85BA-5811A3E69877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C4C9976-A66C-4DBC-85BA-5811A3E69877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C4C9976-A66C-4DBC-85BA-5811A3E69877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C4C9976-A66C-4DBC-85BA-5811A3E69877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4F7FB7-1F84-4A9E-990A-CE9D29B8432F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4F7FB7-1F84-4A9E-990A-CE9D29B8432F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4F7FB7-1F84-4A9E-990A-CE9D29B8432F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4F7FB7-1F84-4A9E-990A-CE9D29B8432F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{003CE3F4-3972-4329-8AFC-FA61759AC67B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{003CE3F4-3972-4329-8AFC-FA61759AC67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{003CE3F4-3972-4329-8AFC-FA61759AC67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{003CE3F4-3972-4329-8AFC-FA61759AC67B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
