@@ -1,0 +1,49 @@
+Benchmarks
+----------
+
+Sizes of buffers and dictionaries in all cases equals to 100_000 (don't overlap size of buffers).
+
+
+Benchmarks for Thread Unsafe Buffer
+===================================
+
+BenchmarkDotNet v0.13.8, Ubuntu 22.04.3 LTS (Jammy Jellyfish)
+Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
+.NET SDK 7.0.100
+  [Host]     : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+  Job-QULFSW : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+
+InvocationCount=1  UnrollFactor=1
+
+| Method           | N      | Mean        | Error     | StdDev     | Ratio | RatioSD | Allocated  | Alloc Ratio |
+|----------------- |------- |------------:|----------:|-----------:|------:|--------:|-----------:|------------:|
+| DictAdd          | 10000  |    828.6 us |  78.60 us |   226.8 us |  1.00 |    0.00 |  547.48 KB |        1.00 |
+| RingKeyBufferAdd | 10000  |  1,516.8 us | 139.54 us |   409.3 us |  1.91 |    0.56 |  547.48 KB |        1.00 |
+|                  |        |             |           |            |       |         |            |             |
+| DictAdd          | 100000 | 11,180.4 us | 706.56 us | 2,015.9 us |  1.00 |    0.00 | 5469.35 KB |        1.00 |
+| RingKeyBufferAdd | 100000 | 16,702.1 us | 712.04 us | 2,054.4 us |  1.54 |    0.32 | 5469.35 KB |        1.00 |
+
+
+Benchmarks for Concurrent Buffers
+=================================
+
+BenchmarkDotNet v0.13.8, Ubuntu 22.04.3 LTS (Jammy Jellyfish)
+Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
+.NET SDK 7.0.100
+  [Host]     : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+  Job-ZTGKTP : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+
+InvocationCount=1  UnrollFactor=1
+
+| Method               | N      | Mean      | Error     | StdDev    | Median    | Ratio | RatioSD | Gen0      | Gen1      | Allocated   | Alloc Ratio |
+|--------------------- |------- |----------:|----------:|----------:|----------:|------:|--------:|----------:|----------:|------------:|------------:|
+| DictAdd              | 10000  |  1.485 ms | 0.0446 ms | 0.1206 ms |  1.477 ms |  1.00 |    0.00 |         - |         - |  2352.84 KB |        1.00 |
+| RingKeyBufferAdd     | 10000  |  1.458 ms | 0.0841 ms | 0.2302 ms |  1.414 ms |  0.99 |    0.18 |         - |         - |   547.48 KB |        0.23 |
+| NonBlockingBufferAdd | 10000  |  1.501 ms | 0.0768 ms | 0.2166 ms |  1.480 ms |  1.02 |    0.17 |         - |         - |   547.48 KB |        0.23 |
+|                      |        |           |           |           |           |       |         |           |           |             |             |
+| DictAdd              | 100000 | 42.294 ms | 0.8248 ms | 1.5289 ms | 42.196 ms |  1.00 |    0.00 | 2000.0000 | 1000.0000 | 16335.83 KB |        1.00 |
+| RingKeyBufferAdd     | 100000 | 15.489 ms | 0.6641 ms | 1.9580 ms | 14.559 ms |  0.36 |    0.05 |         - |         - |  5469.35 KB |        0.33 |
+| NonBlockingBufferAdd | 100000 | 15.531 ms | 0.3369 ms | 0.9556 ms | 15.515 ms |  0.35 |    0.02 |         - |         - |  5469.35 KB |        0.33 |
+
+
+

@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace RingKeyBuffer.Benchmarks;
 
@@ -9,15 +10,14 @@ internal class Item
 }
 
 [MemoryDiagnoser]
-public class BenchmarkDictVsRB
+public class BenchmarkThreadUnsafeBuffer
 {
     private Dictionary<string, Item> _dict = null;
     private RingKeyBuffer<Item> _buffer = null;
 
-    [Params(1000, 10_000)]
-    public int Size { get; set; }
+    public int Size { get; set; } = 100_000;
 
-    [Params(100_000, 1_000_000)]
+    [Params(10_000, 100_000)] // the last value for memleak test
     public int N { get; set; }
 
     [GlobalSetup]
@@ -28,8 +28,13 @@ public class BenchmarkDictVsRB
     [IterationSetup]
     public void IterationSetup()
     {
+        var garbageItem = new Item()
+        {
+            Id="__GARBAGE__"
+        };
+
         _dict = new(Size);
-        _buffer = new(Size, (item) => item.Id);
+        _buffer = new(Size, (item) => item.Id, garbageItem);
     }
 
     [Benchmark(Baseline = true)]
@@ -43,7 +48,7 @@ public class BenchmarkDictVsRB
     }
 
     [Benchmark]
-    public void RKBAdd()
+    public void RingKeyBufferAdd()
     {
         for (int i = 0; i < N; ++i)
         {
@@ -60,8 +65,7 @@ public class BenchmarkConcurrent
     private ConcurrentRingKeyBuffer<Item> _buffer = null;
     private ConcurrentNonBlockingRingKeyBuffer<Item> _nbBuffer = null;
 
-    [Params(1000, 10_000)]
-    public int Size { get; set; }
+    public int Size { get; set; } = 100_000;
 
     [Params(10000, 100_000)]
     public int N { get; set; }
@@ -74,9 +78,14 @@ public class BenchmarkConcurrent
     [IterationSetup]
     public void IterationSetup()
     {
+        var garbageItem = new Item()
+        {
+            Id="__GARBAGE__"
+        };
+
         _dict = new();
-        _buffer = new(Size, (item) => item.Id);
-        _nbBuffer = new(Size, (item) => item.Id);
+        _buffer = new(Size, (item) => item.Id, garbageItem);
+        _nbBuffer = new(Size, (item) => item.Id, garbageItem);
     }
 
     [Benchmark(Baseline = true)]
@@ -90,7 +99,7 @@ public class BenchmarkConcurrent
     }
 
     [Benchmark]
-    public void RKBAdd()
+    public void RingKeyBufferAdd()
     {
         for (int i = 0; i < N; ++i)
         {
@@ -100,7 +109,7 @@ public class BenchmarkConcurrent
     }
 
     [Benchmark]
-    public void RKNBBAdd()
+    public void NonBlockingBufferAdd()
     {
         for (int i = 0; i < N; ++i)
         {

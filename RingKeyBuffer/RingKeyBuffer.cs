@@ -1,57 +1,87 @@
-using System.Collections.Generic;
-using System.Threading;
-
 namespace RingKeyBuffer;
 
-public class RingKeyBuffer<T> : IRingKeyBuffer<T>
-    where T : new()
+public class RingKeyBuffer<TValue> : RingKeyBuffer<string, TValue>
 {
-    public delegate string GetKeyDelegate(T item);
+    public RingKeyBuffer(int size, GetKeyDelegate getKey, TValue garbageItem)
+        : base(size, getKey, garbageItem)
+    {}
+}
 
-    private readonly T[] _buffer = null;
-    private readonly Dictionary<string, int> _keyIndex = null;
-    private int _bufHead = 0;
-    private readonly GetKeyDelegate _getKey = null;
+/**
+ * Thread-unsafe version.
+ */
+public class RingKeyBuffer<TKey, TValue> : IRingKeyBuffer<TKey, TValue>
+    where TKey : notnull
+{
+    public delegate TKey GetKeyDelegate(TValue item);
 
-    public RingKeyBuffer(int size, GetKeyDelegate getKey)
+    private readonly TValue[] _buffer;
+    private readonly Dictionary<TKey, uint> _keyOrder;
+    private readonly GetKeyDelegate _getKey;
+    private uint _globalCounter = 0;
+    private TValue GarbageItem { get; }
+
+    public RingKeyBuffer(int size, GetKeyDelegate getKey, TValue garbageItem)
     {
-        _keyIndex = new(capacity: size);
-        _buffer = new T[size];
+        if (size <= 0)
+            throw new ArgumentOutOfRangeException(nameof(size));
+
+        _keyOrder = new Dictionary<TKey, uint>(capacity: size);
         _getKey = getKey;
+        _buffer = new TValue[size];
+        // _buffer.Initialize();
+        GarbageItem = garbageItem;
+        for (var i = 0; i < _buffer.Length; i++)
+            _buffer[i] = GarbageItem;
     }
 
-    public void Add(T item)
-    {
-        var oldItem = _buffer[_bufHead];
-        if (oldItem != null && _getKey(oldItem) != null)
-            _keyIndex.Remove(_getKey(oldItem));
+    private uint BufHead => _globalCounter % (uint)_buffer.Length;
 
-        _buffer[_bufHead] = item;
-        _keyIndex[_getKey(item)] = _bufHead;
-        if (_bufHead < _buffer.Length - 1)
-            ++_bufHead;
-        else
-            _bufHead = 0;
+    private void ClearOldItem()
+    {
+        var oldItem = _buffer[BufHead];
+        if (oldItem == null)
+            return;
+
+        var oldKey = _getKey(oldItem);
+        Delete(oldKey);
     }
 
-    public bool TryGet(string key, out T item)
+    public void Add(TValue item)
     {
-        var ans = _keyIndex.ContainsKey(key);
-        if (!ans)
+        if (!Equals(item, GarbageItem))
+            ClearOldItem();
+
+        var key = _getKey(item);
+
+        _buffer[BufHead] = item;
+
+        if (_keyOrder.TryGetValue(key, out var existIndex))
+            _buffer[existIndex % _buffer.Length] = GarbageItem;
+
+        _keyOrder[key] = _globalCounter;
+        _globalCounter++;
+    }
+
+    public bool TryGet(TKey key, out TValue? item)
+    {
+        if (!_keyOrder.TryGetValue(key, out var globalIndex))
         {
-            item = new T { };
-        }
-        else
-        {
-            var i = _keyIndex[key];
-            item = _buffer[i];
+            item = default;
+            return false;
         }
 
-        return ans;
+        var bufIndex = globalIndex % _buffer.Length;
+        item = _buffer[bufIndex];
+        return true;
     }
 
-    public bool Delete(string key)
+    public bool Delete(TKey key)
     {
-        return _keyIndex.Remove(key);
+        if (!_keyOrder.TryGetValue(key, out _))
+            return false;
+
+        _keyOrder.Remove(key);
+        return true;
     }
 }

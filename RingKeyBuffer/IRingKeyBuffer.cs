@@ -1,9 +1,9 @@
 namespace RingKeyBuffer;
 
-public interface IRingKeyBuffer<T>
+public interface IRingKeyBuffer<in TKey, TValue>
 {
-    void Add(T item);
-    bool TryGet(string key, out T item);
-    bool Delete(string key);
+    void Add(TValue item);
+    bool TryGet(TKey key, out TValue? item);
+    bool Delete(TKey key);
 
 }

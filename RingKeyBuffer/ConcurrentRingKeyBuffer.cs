@@ -1,36 +1,31 @@
-using System.Collections.Generic;
-using System.Threading;
-
 namespace RingKeyBuffer;
 
-public class ConcurrentRingKeyBuffer<T>: IRingKeyBuffer<T>
-    where T : new()
+public class ConcurrentRingKeyBuffer<TValue> : ConcurrentRingKeyBuffer<string, TValue>
 {
-    public delegate string GetKeyDelegate(T item);
+    public ConcurrentRingKeyBuffer(int size, RingKeyBuffer<string, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+        : base(size, getKey, garbageItem)
+    {}
+}
 
-    private readonly T[] _buffer = null;
-    private readonly Dictionary<string, int> _keyIndex = null;
-    private int _bufHead = 0;
-    private readonly GetKeyDelegate _getKey = null;
+public class ConcurrentRingKeyBuffer<TKey, TValue> : IRingKeyBuffer<TKey, TValue>
+    where TKey : notnull
+{
     private readonly ReaderWriterLockSlim _lock = new();
+    private readonly RingKeyBuffer<TKey, TValue> _unsafeBuffer;
 
-    public ConcurrentRingKeyBuffer(int size, GetKeyDelegate getKey)
-    {
-        _keyIndex = new(capacity: size);
-        _buffer = new T[size];
-        _getKey = getKey;
-    }
+    public ConcurrentRingKeyBuffer(int size, RingKeyBuffer<TKey, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+        => _unsafeBuffer = new RingKeyBuffer<TKey, TValue>(size, getKey, garbageItem);
 
-    public void Add(T item)
+    public void Add(TValue item)
     {
-        if (item == null || string.IsNullOrEmpty(_getKey(item)))
+        if (item == null)
             return;
 
         _lock.EnterWriteLock();
 
         try
         {
-            UnsafeAdd(item);
+            _unsafeBuffer.Add(item);
         }
         finally
         {
@@ -38,34 +33,14 @@ public class ConcurrentRingKeyBuffer<T>: IRingKeyBuffer<T>
         }
     }
 
-    private void UnsafeAdd(T item)
+    public bool TryGet(TKey key, out TValue? item)
     {
-        var oldItem = _buffer[_bufHead];
-        if (oldItem != null && _getKey(oldItem) != null)
-            _keyIndex.Remove(_getKey(oldItem));
-
-        _buffer[_bufHead] = item;
-        _keyIndex[_getKey(item)] = _bufHead;
-        if (_bufHead < _buffer.Length - 1)
-            ++_bufHead;
-        else
-            _bufHead = 0;
-    }
-
-    public bool TryGet(string key, out T item)
-    {
-        if (string.IsNullOrEmpty(key))
-        {
-            item = new T { };
-            return false;
-        }
-
         _lock.EnterReadLock();
 
         bool ans = false;
         try
         {
-            ans = UnsafeTryGet(key, out item);
+            ans = _unsafeBuffer.TryGet(key, out item);
         }
         finally
         {
@@ -75,29 +50,13 @@ public class ConcurrentRingKeyBuffer<T>: IRingKeyBuffer<T>
         return ans;
     }
 
-    private bool UnsafeTryGet(string key, out T item)
-    {
-        var ans = _keyIndex.ContainsKey(key);
-        if (!ans)
-        {
-            item = new T { };
-        }
-        else
-        {
-            var i = _keyIndex[key];
-            item = _buffer[i];
-        }
-
-        return ans;
-    }
-
-    public bool Delete(string key)
+    public bool Delete(TKey key)
     {
         _lock.EnterWriteLock();
 
         try
         {
-            return _keyIndex.Remove(key);
+            return _unsafeBuffer.Delete(key);
         }
         finally
         {

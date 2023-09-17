@@ -2,18 +2,29 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0; net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>RingKeyBuffer.Benchmarks</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.8" />
     </ItemGroup>
     
     <ItemGroup>
         <ProjectReference Include="../RingKeyBuffer/RingKeyBuffer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="BenchmarkDotNet.Artifacts\**" />
     </ItemGroup>
 
 </Project>
