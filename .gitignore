@@ -2,3 +2,4 @@
 bin
 obj
 RingKeyBuffer.Benchmarks/BenchmarkDotNet.Artifacts
+nuget-apikey.txt
