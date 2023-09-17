@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0; net7.0</TargetFrameworks>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AssemblyName>RingKeyBuffer</AssemblyName>
         <RootNamespace>RingKeyBuffer</RootNamespace>
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <OutputType>Library</OutputType>
+        <DefaultItemExcludes>$(DefaultItemExcludes)</DefaultItemExcludes>
     </PropertyGroup>
 
 </Project>
