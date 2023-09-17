@@ -2,7 +2,7 @@
 
 The data structure combines a ring buffer (circular buffer) and a Dictionary (Map).
 
-It can be used as LRU cache.
+It can be used as an LRU cache.
 
 There are 3 top-level classes:
 
@@ -13,7 +13,7 @@ There are 3 top-level classes:
 Each of them has 2 generic parameters: `TKey` and `TValue` (type of key and type of value respectively).
 It can be possible to skip `TKey`, by default it is `string`.
 
-They implement common interface:
+They implement a common interface:
 
 ```csharp
 public interface IRingKeyBuffer<in TKey, TValue>
@@ -27,7 +27,7 @@ public interface IRingKeyBuffer<in TKey, TValue>
 
 Below few examples of usage.
 
-Using of thread unsafe buffer:
+Using of thread-unsafe buffer:
 
 ```csharp
 const int BUF_SIZE = 1_000;
