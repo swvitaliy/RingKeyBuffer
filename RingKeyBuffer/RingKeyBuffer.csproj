@@ -6,9 +6,14 @@
         <Nullable>enable</Nullable>
         <AssemblyName>RingKeyBuffer</AssemblyName>
         <RootNamespace>RingKeyBuffer</RootNamespace>
-        <VersionPrefix>0.0.1</VersionPrefix>
+        <VersionPrefix>0.0.2</VersionPrefix>
         <OutputType>Library</OutputType>
         <DefaultItemExcludes>$(DefaultItemExcludes)</DefaultItemExcludes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>
