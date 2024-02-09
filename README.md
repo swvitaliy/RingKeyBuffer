@@ -1,17 +1,19 @@
-# The Ring Key Buffer
+# Ring Key Buffer
 
 The data structure combines a ring buffer (circular buffer) and a Dictionary (Map).
 
 It can be used as an LRU cache.
 
-There are 3 top-level classes:
+There are 3 classes:
 
 * RingKeyBuffer
 * ThreadSafeRingKeyBuffer
-* ThreadSafeNonBlockingRingKeyBuffer (don't wait for lock release when it is acquired)
+* ThreadSafeNonBlockingRingKeyBuffer
 
-Each of them has 2 generic parameters: `TKey` and `TValue` (type of key and type of value respectively).
-It can be possible to skip `TKey`, by default it is `string`.
+    It uses `TryEnterWriteLock` and `TryEnterReadLock` methods and don't acquire lock when they return false.
+
+They 2 generic parameters: TKey and TValue (key type and value type respectively). 
+TKey is a string by default.
 
 They implement a common interface:
 
