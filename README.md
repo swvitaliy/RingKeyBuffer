@@ -43,7 +43,7 @@ for (var i = 0; i < 10_000; i++)
 
 ```
 
-Creation concurrency buffers:
+Creation thread-safe buffers:
 
 ```csharp
 class Item
@@ -61,7 +61,7 @@ var buffer = new ThreadSafeRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garb
 var nonBlockingBuffer = new ThreadSafeNonBlockingRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
 ```
 
-Use concurrency buffers:
+Use thread-safe buffers:
 
 ```csharp
 var buffer = new ThreadSafeRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
