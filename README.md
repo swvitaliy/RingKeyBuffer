@@ -10,7 +10,7 @@ There are 3 classes:
 * ThreadSafeRingKeyBuffer
 * ThreadSafeNonBlockingRingKeyBuffer
 
-    It uses `TryEnterWriteLock` and `TryEnterReadLock` methods and don't acquire lock when they return false.
+ThreadSafeNonBlockingRingKeyBuffer uses `TryEnterWriteLock` and `TryEnterReadLock` methods and don't acquire lock when they return false.
 
 They 2 generic parameters: TKey and TValue (key type and value type respectively). 
 TKey is a string by default.
