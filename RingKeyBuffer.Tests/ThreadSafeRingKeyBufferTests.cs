@@ -1,13 +1,13 @@
 namespace RingKeyBuffer.Tests;
 
 [TestFixture]
-public class ConcurrentRingKeyBufferTests
+public class ThreadSafeRingKeyBufferTests
 {
     [Test]
     public async Task AllValuesAreContainsInBufferWhenNotOverlapSizeTest()
     {
         const int BUF_SIZE = 10_000;
-        IRingKeyBuffer<int, int> buf = new ConcurrentRingKeyBuffer<int, int>(size: BUF_SIZE, getKey: i => i, -1);
+        IRingKeyBuffer<int, int> buf = new ThreadSafeRingKeyBuffer<int, int>(size: BUF_SIZE, getKey: i => i, -1);
 
         var tasks = new Task[10_000];
 
@@ -35,7 +35,7 @@ public class ConcurrentRingKeyBufferTests
     public async Task OldestValuesDisappearWhenSizeWasOverlappedTest()
     {
         const int BUF_SIZE = 5_000;
-        IRingKeyBuffer<int, int> buf = new ConcurrentRingKeyBuffer<int, int>(size: BUF_SIZE, getKey: i => i, -1);
+        IRingKeyBuffer<int, int> buf = new ThreadSafeRingKeyBuffer<int, int>(size: BUF_SIZE, getKey: i => i, -1);
 
         var tasks = new Task[10_000];
         void RunTask(int i)

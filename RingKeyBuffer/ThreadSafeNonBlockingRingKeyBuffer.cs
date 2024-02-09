@@ -1,14 +1,14 @@
 namespace RingKeyBuffer;
 
-public class ConcurrentNonBlockingRingKeyBuffer<TValue> : ConcurrentNonBlockingRingKeyBuffer<string, TValue>
+public class ThreadSafeNonBlockingRingKeyBuffer<TValue> : ThreadSafeNonBlockingRingKeyBuffer<string, TValue>
 {
-    public ConcurrentNonBlockingRingKeyBuffer(int size, RingKeyBuffer<string, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+    public ThreadSafeNonBlockingRingKeyBuffer(int size, RingKeyBuffer<string, TValue>.GetKeyDelegate getKey, TValue garbageItem)
         : base(size, getKey, garbageItem)
     {}
 }
 
 
-public class ConcurrentNonBlockingRingKeyBuffer<TKey, TValue>: IRingKeyBuffer<TKey, TValue>
+public class ThreadSafeNonBlockingRingKeyBuffer<TKey, TValue>: IRingKeyBuffer<TKey, TValue>
     where TKey : notnull
 {
     private const int RwLockWriteTimeout = 50; // 50ms
@@ -17,7 +17,7 @@ public class ConcurrentNonBlockingRingKeyBuffer<TKey, TValue>: IRingKeyBuffer<TK
     private readonly ReaderWriterLockSlim _lock = new();
     private readonly RingKeyBuffer<TKey, TValue> _unsafeBuffer;
 
-    public ConcurrentNonBlockingRingKeyBuffer(int size, RingKeyBuffer<TKey, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+    public ThreadSafeNonBlockingRingKeyBuffer(int size, RingKeyBuffer<TKey, TValue>.GetKeyDelegate getKey, TValue garbageItem)
         => _unsafeBuffer = new RingKeyBuffer<TKey, TValue>(size, getKey, garbageItem);
 
     public void Add(TValue item) => TryAdd(item);

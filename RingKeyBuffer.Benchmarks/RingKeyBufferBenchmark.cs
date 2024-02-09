@@ -62,8 +62,8 @@ public class BenchmarkThreadUnsafeBuffer
 public class BenchmarkConcurrent
 {
     private ConcurrentDictionary<string, Item> _dict = null;
-    private ConcurrentRingKeyBuffer<Item> _buffer = null;
-    private ConcurrentNonBlockingRingKeyBuffer<Item> _nbBuffer = null;
+    private ThreadSafeRingKeyBuffer<Item> _buffer = null;
+    private ThreadSafeNonBlockingRingKeyBuffer<Item> _nbBuffer = null;
 
     public int Size { get; set; } = 100_000;
 

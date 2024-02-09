@@ -1,19 +1,19 @@
 namespace RingKeyBuffer;
 
-public class ConcurrentRingKeyBuffer<TValue> : ConcurrentRingKeyBuffer<string, TValue>
+public class ThreadSafeRingKeyBuffer<TValue> : ThreadSafeRingKeyBuffer<string, TValue>
 {
-    public ConcurrentRingKeyBuffer(int size, RingKeyBuffer<string, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+    public ThreadSafeRingKeyBuffer(int size, RingKeyBuffer<string, TValue>.GetKeyDelegate getKey, TValue garbageItem)
         : base(size, getKey, garbageItem)
     {}
 }
 
-public class ConcurrentRingKeyBuffer<TKey, TValue> : IRingKeyBuffer<TKey, TValue>
+public class ThreadSafeRingKeyBuffer<TKey, TValue> : IRingKeyBuffer<TKey, TValue>
     where TKey : notnull
 {
     private readonly ReaderWriterLockSlim _lock = new();
     private readonly RingKeyBuffer<TKey, TValue> _unsafeBuffer;
 
-    public ConcurrentRingKeyBuffer(int size, RingKeyBuffer<TKey, TValue>.GetKeyDelegate getKey, TValue garbageItem)
+    public ThreadSafeRingKeyBuffer(int size, RingKeyBuffer<TKey, TValue>.GetKeyDelegate getKey, TValue garbageItem)
         => _unsafeBuffer = new RingKeyBuffer<TKey, TValue>(size, getKey, garbageItem);
 
     public void Add(TValue item)

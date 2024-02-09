@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <AssemblyName>RingKeyBuffer</AssemblyName>
         <RootNamespace>RingKeyBuffer</RootNamespace>
-        <VersionPrefix>0.0.2</VersionPrefix>
+        <VersionPrefix>0.0.3</VersionPrefix>
         <OutputType>Library</OutputType>
         <DefaultItemExcludes>$(DefaultItemExcludes)</DefaultItemExcludes>
         <PackageReadmeFile>README.md</PackageReadmeFile>

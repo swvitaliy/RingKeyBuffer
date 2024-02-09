@@ -7,8 +7,8 @@ It can be used as an LRU cache.
 There are 3 top-level classes:
 
 * RingKeyBuffer
-* ConcurrencyRingKeyBuffer (thread safety supports)
-* ConcurrencyNonBlockingRingKeyBuffer (thread safety supports; don't wait for lock release when it is acquired)
+* ThreadSafeRingKeyBuffer
+* ThreadSafeNonBlockingRingKeyBuffer (don't wait for lock release when it is acquired)
 
 Each of them has 2 generic parameters: `TKey` and `TValue` (type of key and type of value respectively).
 It can be possible to skip `TKey`, by default it is `string`.
@@ -57,14 +57,14 @@ var garbageItem = new Item()
 };
 
 const int BUF_SIZE = 1_000;
-var buffer = new ConcurrentRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
-var nonBlockingBuffer = new ConcurrentNonBlockingRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
+var buffer = new ThreadSafeRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
+var nonBlockingBuffer = new ThreadSafeNonBlockingRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
 ```
 
 Use concurrency buffers:
 
 ```csharp
-var buffer = new ConcurrentRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
+var buffer = new ThreadSafeRingKeyBuffer<Item>(BUF_SIZE, (item) => item.Id, garbageItem);
 
 var tasks = new Task[10_000];
 void RunTask(int i)
