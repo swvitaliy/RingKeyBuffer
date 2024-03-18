@@ -12,7 +12,7 @@ PACKAGE_VERSION=$(parse_version_csproj RingKeyBuffer.csproj)
 
 APIKEY=$(cat ../nuget-apikey.txt)
 
-FRAMEWORK=net7.0
+FRAMEWORK=net8.0
 
 dotnet publish -c Release -f "${FRAMEWORK}"
 

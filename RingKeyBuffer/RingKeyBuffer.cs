@@ -29,7 +29,6 @@ public class RingKeyBuffer<TKey, TValue> : IRingKeyBuffer<TKey, TValue>
         _keyOrder = new Dictionary<TKey, uint>(capacity: size);
         _getKey = getKey;
         _buffer = new TValue[size];
-        // _buffer.Initialize();
         GarbageItem = garbageItem;
         for (var i = 0; i < _buffer.Length; i++)
             _buffer[i] = GarbageItem;
