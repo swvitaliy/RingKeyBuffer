@@ -1,4 +1,4 @@
-# Ring Key Buffer
+# RingKeyBuffer
 
 The data structure combines a ring buffer (circular buffer) and a Dictionary (Map).
 
