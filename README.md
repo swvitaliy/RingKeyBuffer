@@ -2,8 +2,6 @@
 
 The data structure combines a ring buffer (circular buffer) and a Dictionary (Map).
 
-It can be used as an LRU cache.
-
 There are 3 classes:
 
 * RingKeyBuffer
